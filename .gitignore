@@ -181,3 +181,5 @@ README.html
 .exercism
 
 .env
+
+/logs/*
