@@ -2,12 +2,12 @@ services:
   postgresql:
     image: postgres:latest
     environment:
-      - POSTGRES_DATABASE=${POSTGRES_DATABASE}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_PASSWORD}
     ports:
-      - ${POSTGRES_PORT}:3306
+      - ${POSTGRES_PORT}:5432
     volumes:
       - postgresql-data:/var/lib/postgresql
     networks:
@@ -25,7 +25,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_HOST=${POSTGRES_HOST}:${POSTGRES_PORT}
+      - KAFKA_SERVER=${KAFKA_HOST}:${KAFKA_PORT}
     ports:
       - ${SPRING_PORT}:8080
     volumes:
@@ -38,10 +39,10 @@ services:
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.1
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_PORT}
       ZOOKEEPER_TICK_TIME: 2000
     ports:
-      - "2181:2181"
+      - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
     networks:
       - app-network
     restart: unless-stopped
@@ -53,14 +54,14 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
 
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: ${ZOOKEEPER_HOST}:${ZOOKEEPER_PORT}
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:${KAFKA_PORT}
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${KAFKA_HOST}:${KAFKA_PORT}
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
 
     ports:
-      - "9092:9092"
+      - "${KAFKA_PORT}:${KAFKA_PORT}"
     networks:
       - app-network
     restart: unless-stopped
@@ -71,11 +72,11 @@ services:
       - kafka
       - zookeeper
     ports:
-      - "8085:8080"
+      - "${KAFKA_UI_PORT}:8080"
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:2181
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=${KAFKA_HOST}:${KAFKA_PORT}
+      - KAFKA_CLUSTERS_0_ZOOKEEPER=${ZOOKEEPER_HOST}:${ZOOKEEPER_PORT}
     networks:
       - app-network
     restart: unless-stopped
