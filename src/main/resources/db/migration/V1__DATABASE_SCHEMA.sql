@@ -1,6 +1,6 @@
 CREATE TABLE tb_device_measurement
 (
-    device_measurement_id UUID PRIMARY KEY     DEFAULT gen_random_uuid(),
+    device_measurement_id BIGSERIAL PRIMARY KEY,
 
     device_id             BIGSERIAL   NOT NULL,
 

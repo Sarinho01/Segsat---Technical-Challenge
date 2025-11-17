@@ -9,7 +9,6 @@ import org.hibernate.annotations.SourceType;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
-import java.util.UUID;
 
 @Entity
 @Table(name = "tb_device_measurement")
@@ -20,9 +19,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class DeviceMeasurement {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "device_measurement_id", nullable = false, updatable = false)
-    private UUID id;
+    private Long id;
 
     @NotNull
     private Integer deviceId;
