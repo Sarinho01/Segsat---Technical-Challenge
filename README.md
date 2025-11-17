@@ -36,7 +36,7 @@ Nenhuma alteração é necessária para rodar o projeto, nem é recomendado que 
 ## 3. Subir o projeto
 ```bash
 
-docker compose up
+docker compose up --build
 ```
 Certifique-se, para evitar conflitos, de que não há containers rodando ao mesmo tempo
 
