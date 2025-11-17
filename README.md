@@ -21,8 +21,8 @@ Criar um microserviço em Spring Boot (Java) que consuma mensagens de um tópico
 ## 1. Clonar o repositório
 ```bash
 
-git clone <url-do-repositorio>
-cd <nome-do-projeto>
+git clone https://github.com/Sarinho01/Segsat---Technical-Challenge.git
+cd Segsat---Technical-Challenge
 ```
 
 ## 2. Criar o arquivo de ambiente
